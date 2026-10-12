@@ -5,12 +5,14 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node login-ratelimit.test.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.6.1",
     "google-auth-library": "^10.6.2",
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
