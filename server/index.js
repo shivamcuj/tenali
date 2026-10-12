@@ -75,6 +75,19 @@ app.use('/case-studies', express.static(caseStudiesPath));
 // Adds /api/auth/login and /api/auth/me. Hardcoded users are seeded into
 // MongoDB on startup. If Mongo is unreachable the rest of the server still
 // serves; only the auth endpoints will return 503.
+const rateLimit = require('express-rate-limit');
+// Login has no throttle anywhere else in this app, so repeated guesses against
+// a real account can be sent as fast as the network allows. Matches the limit
+// the other Tenali apps already use.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { error: 'Too many attempts. Please try again in a few minutes.' },
+});
+app.use('/api/auth/login', authLimiter);
+
 const auth = require('./auth');
 app.use('/api/auth', auth.router);
 auth.seedUsers().catch(() => {});  // always populate in-memory fallback
